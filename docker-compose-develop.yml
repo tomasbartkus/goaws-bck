@@ -1,0 +1,28 @@
+version: '2'
+
+services:
+    goaws:
+        build:
+            context: ./docker
+            dockerfile: Dockerfile-develop
+        command: ./scripts/run.sh
+        ports:
+            - 4100
+            - 9324
+            - 9292
+        working_dir: /go/src/github.com/tomasbartkus/GoAws
+        volumes:
+            - ./:/go/src/github.com/tomasbartkus/GoAws
+        environment:
+            - GO15VENDOREXPERIMENT=1
+        networks:
+            default:
+                aliases:
+                    - sqs.articleservice
+                    - sqs.eu-west-1
+                    - sns.articleservice
+
+networks:
+    default:
+        external:
+            name: dcsnetwork

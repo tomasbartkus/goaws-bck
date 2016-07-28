@@ -8,9 +8,9 @@ import (
 	"net/http"
 	"os"
 
-	sns "github.com/p4tin/goaws/gosns"
-	sqs "github.com/p4tin/goaws/gosqs"
-	"github.com/p4tin/goaws/conf"
+	sns "github.com/tomasbartkus/GoAws/gosns"
+	sqs "github.com/tomasbartkus/GoAws/gosqs"
+	"github.com/tomasbartkus/GoAws/conf"
 )
 
 func BadRequest(w http.ResponseWriter, req *http.Request) {
@@ -87,7 +87,19 @@ func main() {
 	r.HandleFunc("/", IndexServer).Methods("GET", "POST")
 	r.HandleFunc("/queue/{queueName}", IndexServer).Methods("GET", "POST")
 
+	go func() {
+		log.Printf("GoAws listening on: 0.0.0.0:9324\n")
+		err := http.ListenAndServe(":9324", r)
+		log.Fatal(err)
+	}()
+
+	go func() {
+		log.Printf("GoAws listening on: 0.0.0.0:9292\n")
+		err := http.ListenAndServe(":9292", r)
+		log.Fatal(err)
+	}()
+
 	log.Printf("GoAws listening on: 0.0.0.0:%s\n", portNumber)
-	err := http.ListenAndServe("0.0.0.0:"+portNumber, r)
+	err := http.ListenAndServe(":"+portNumber, r)
 	log.Fatal(err)
 }

@@ -1,0 +1,8 @@
+#!/bin/bash -e
+
+ORG_PATH="github.com/tomasbartkus"
+REPO_PATH="${ORG_PATH}/GoAws"
+
+echo "Building goaws"
+GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o bin/goaws -a -installsuffix netgo -ldflags '-s' ${REPO_PATH}
+chmod +x bin/goaws

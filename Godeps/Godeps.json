@@ -1,0 +1,46 @@
+{
+	"ImportPath": "github.com/tomasbartkus/GoAws",
+	"GoVersion": "go1.6",
+	"GodepVersion": "v74",
+	"Packages": [
+		"./..."
+	],
+	"Deps": [
+		{
+			"ImportPath": "github.com/cloudfoundry-incubator/candiedyaml",
+			"Rev": "99c3df83b51532e3615f851d8c2dbb638f5313bf"
+		},
+		{
+			"ImportPath": "github.com/ghodss/yaml",
+			"Rev": "aa0c862057666179de291b67d9f093d12b5a8473"
+		},
+		{
+			"ImportPath": "github.com/gorilla/context",
+			"Rev": "1c83b3eabd45b6d76072b66b746c20815fb2872d"
+		},
+		{
+			"ImportPath": "github.com/gorilla/mux",
+			"Rev": "2aad27d3101b8183f8fa1bebdbc2cdb74fcef090"
+		},
+		{
+			"ImportPath": "github.com/p4tin/goaws/common",
+			"Comment": "goaws-beta-1-25-g460d7b8",
+			"Rev": "460d7b83f4f9bac6cc11a0b1666fffb9fc2f35c3"
+		},
+		{
+			"ImportPath": "github.com/p4tin/goaws/conf",
+			"Comment": "goaws-beta-1-25-g460d7b8",
+			"Rev": "460d7b83f4f9bac6cc11a0b1666fffb9fc2f35c3"
+		},
+		{
+			"ImportPath": "github.com/p4tin/goaws/gosns",
+			"Comment": "goaws-beta-1-25-g460d7b8",
+			"Rev": "460d7b83f4f9bac6cc11a0b1666fffb9fc2f35c3"
+		},
+		{
+			"ImportPath": "github.com/p4tin/goaws/gosqs",
+			"Comment": "goaws-beta-1-25-g460d7b8",
+			"Rev": "460d7b83f4f9bac6cc11a0b1666fffb9fc2f35c3"
+		}
+	]
+}

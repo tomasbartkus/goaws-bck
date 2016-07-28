@@ -1,0 +1,5 @@
+FROM home24/go:1.6
+
+RUN apt-get update && apt-get install -y pkgconf libxml2-dev
+
+EXPOSE 4100

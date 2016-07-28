@@ -10,8 +10,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/p4tin/goaws/common"
-	sqs "github.com/p4tin/goaws/gosqs"
+	"github.com/tomasbartkus/GoAws/common"
+	sqs "github.com/tomasbartkus/GoAws/gosqs"
 )
 
 type SnsErrorType struct {
@@ -80,7 +80,7 @@ func CreateTopic(w http.ResponseWriter, req *http.Request) {
 	if _, ok := SyncTopics.Topics[topicName]; ok {
 		topicArn = SyncTopics.Topics[topicName].Arn
 	} else {
-		topicArn = "arn:aws:sns:local:000000000000:" + topicName
+		topicArn = "arn:aws:sns:eu-west-1:000000000000:" + topicName
 
 		log.Println("Creating Topic:", topicName)
 		topic := &Topic{Name: topicName, Arn: topicArn}
@@ -269,6 +269,11 @@ func Publish(w http.ResponseWriter, req *http.Request) {
 				uriSegments := strings.Split(queueUrl, "/")
 				queueName := uriSegments[len(uriSegments)-1]
 
+				parts := strings.Split(queueName, ":")
+				if len(parts) > 0 {
+					queueName = parts[len(parts)-1]
+				}
+
 				msg := sqs.Message{}
 				if subs.Raw == false {
 					msg.MessageBody = CreateMessageBody(messageBody, topicArn)
@@ -279,6 +284,7 @@ func Publish(w http.ResponseWriter, req *http.Request) {
 				msg.MD5OfMessageBody = common.GetMD5Hash(messageBody)
 				msg.Uuid, _ = common.NewUUID()
 				sqs.SyncQueues.Lock()
+				log.Println(fmt.Sprintf("--------> %s\n",msg.MessageBody))
 				sqs.SyncQueues.Queues[queueName].Messages = append(sqs.SyncQueues.Queues[queueName].Messages, msg)
 				sqs.SyncQueues.Unlock()
 				common.LogMessage(fmt.Sprintf("%s: Topic: %s(%s), Message: %s\n", time.Now().Format("2006-01-02 15:04:05"), topicName, queueName, msg.MessageBody))
@@ -306,11 +312,18 @@ type TopicMessage struct {
 }
 
 func CreateMessageBody(msg string, topicArn string) []byte {
+	x := struct {
+		Default string `json:"default"`
+		SQS string `json:"sqs"`
+	}{}
+
+	json.Unmarshal([]byte(msg), &x)
+
 	msgId, _ := common.NewUUID()
 
 	message := TopicMessage{}
 	message.Type = "Notification"
-	message.Message = msg
+	message.Message = x.SQS
 	message.MessageId = msgId
 	message.TopicArn = topicArn
 	t := time.Now()

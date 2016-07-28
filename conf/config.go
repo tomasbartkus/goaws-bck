@@ -6,9 +6,9 @@ import (
 	"path/filepath"
 
 	"github.com/ghodss/yaml"
-	"github.com/p4tin/goaws/common"
-	sns "github.com/p4tin/goaws/gosns"
-	sqs "github.com/p4tin/goaws/gosqs"
+	"github.com/tomasbartkus/GoAws/common"
+	sns "github.com/tomasbartkus/GoAws/gosns"
+	sqs "github.com/tomasbartkus/GoAws/gosqs"
 )
 
 type EnvSubsciption struct {
@@ -28,6 +28,7 @@ type EnvQueue struct {
 type Environment struct {
 	Host        string
 	Port        string
+	Region      string
 	LogMessages bool
 	LogFile     string
 	Topics      []EnvTopic
@@ -78,8 +79,14 @@ func LoadYamlConfig(filename string, env string, portNumber string) string {
 	}
 	sqs.SyncQueues.Unlock()
 	sns.SyncTopics.Lock()
+
+	region := "eu-west-1"
+	if envs[env].Region != "" {
+		region = envs[env].Region
+	}
+
 	for _, topic := range envs[env].Topics {
-		topicArn := "arn:aws:sns:local:000000000000:" + topic.Name
+		topicArn := "arn:aws:sns:"+region+":000000000000:" + topic.Name
 
 		newTopic := &sns.Topic{Name: topic.Name, Arn: topicArn}
 		newTopic.Subscriptions = make([]*sns.Subscription, 0, 0)
